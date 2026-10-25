@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Create account — Study Space</title>
+		<link rel="stylesheet" href="css/styles.css">
+		<script src="js/common.js" defer></script>
+		<script src="js/auth.js" defer></script>
+	</head>
+	<body class="auth-page"><a class="brand auth-brand" href="index.html"><span class="brand-mark">S</span><span>Study Space</span></a>
+		<main class="auth-layout">
+			<section class="auth-card"><span class="eyebrow">YOUR OWN STUDY SPACE</span>
+				<h1>Let's get you started.</h1>
+				<p class="muted">Create a demo profile to explore the workspace.</p>
+				<form id="signupForm" class="form-stack">
+					<label for="signupName">Your name</label>
+					<input id="signupName" name="name" type="text" placeholder="Alex Student" autocomplete="name" required>
+					<label for="signupEmail">Email address</label>
+					<input id="signupEmail" name="email" type="email" placeholder="you@example.com" autocomplete="email" required>
+					<label for="signupPassword">Create a password</label>
+					<input id="signupPassword" name="password" type="password" placeholder="At least 8 characters" minlength="8" autocomplete="new-password" required>
+					<button class="button button-primary button-full" type="submit">Create account</button>
+					<p id="signupMessage" class="form-message" role="status"></p>
+				</form>
+				<p class="auth-switch">Already have an account? <a href="login.html">Log in</a></p>
+				<p class="small-note">Demo only: account details are stored in this browser, not on a server.</p>
+			</section>
+			<aside class="auth-aside">
+				<div class="aside-orb">S</div>
+				<h2>Make learning your own.</h2>
+				<p>Organize classes, save notes, and find a study method that works for you.</p>
+			</aside>
+		</main>
+	</body>
+</html>

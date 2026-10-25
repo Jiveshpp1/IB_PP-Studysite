@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Log in — Study Space</title>
+		<link rel="stylesheet" href="css/styles.css">
+		<script src="js/common.js" defer></script>
+		<script src="js/auth.js" defer></script>
+	</head>
+	<body class="auth-page"><a class="brand auth-brand" href="index.html"><span class="brand-mark">S</span><span>Study Space</span></a>
+		<main class="auth-layout">
+			<section class="auth-card"><span class="eyebrow">WELCOME BACK</span>
+				<h1>Pick up where you left off.</h1>
+				<p class="muted">Log in to return to your study space.</p>
+				<form id="loginForm" class="form-stack">
+					<label for="loginEmail">Email address</label>
+					<input id="loginEmail" name="email" type="email" placeholder="you@example.com" autocomplete="email" required>
+					<label for="loginPassword">Password</label>
+					<input id="loginPassword" name="password" type="password" placeholder="Enter your password" autocomplete="current-password" required>
+					<button class="button button-primary button-full" type="submit">Log in</button>
+					<p id="loginMessage" class="form-message" role="status"></p>
+				</form>
+				<p class="auth-switch">New to Study Space? <a href="signup.html">Create an account</a></p>
+				<p class="small-note">Demo only: this form does not securely authenticate users yet.</p>
+			</section>
+			<aside class="auth-aside">
+				<div class="aside-orb">S</div>
+				<h2>A little progress adds up.</h2>
+				<p>Keep your materials together, take one step at a time, and make room to learn.</p>
+			</aside>
+		</main>
+	</body>
+</html>

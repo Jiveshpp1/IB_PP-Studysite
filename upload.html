@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Add material — Study Space</title>
+		<link rel="stylesheet" href="css/styles.css">
+		<script src="js/common.js" defer></script>
+		<script src="js/upload.js" defer></script>
+	</head>
+	<body class="app-page">
+		<aside class="sidebar" id="appSidebar"><a class="brand sidebar-brand" href="dashboard.html"><span class="brand-mark">S</span><span>Study Space</span></a>
+			<div class="sidebar-label">WORKSPACE</div>
+			<nav class="side-nav" aria-label="Workspace navigation"><a class="side-link " href="dashboard.html"><span class="side-icon">▦</span><span>Dashboard</span></a><a class="side-link " href="classes.html"><span class="side-icon">▤</span><span>My classes</span></a><a class="side-link " href="materials.html"><span class="side-icon">▧</span><span>Materials</span></a><a class="side-link active" href="upload.html"><span class="side-icon">+</span><span>Add material</span></a><a class="side-link " href="study-tools.html"><span class="side-icon">✦</span><span>Study tools</span></a></nav>
+			<div class="sidebar-bottom">
+				<div class="sidebar-tip"><span class="tip-icon">✦</span><strong>Keep it simple.</strong>
+					<p>One focused session is a good start.</p>
+				</div>
+				<a class="side-link" href="index.html"><span class="side-icon">↩</span><span>Back to website</span></a>
+			</div>
+		</aside>
+		<div class="app-main">
+			<header class="app-topbar">
+				<button class="menu-button" id="menuToggle" aria-label="Toggle navigation">☰</button>
+				<div class="breadcrumb">Study Space <span>/</span> Add material</div>
+				<div class="topbar-user"><span class="avatar" id="userAvatar">S</span><span id="userDisplayName">Student</span>
+					<button id="logoutButton" class="logout-button" type="button">Log out</button>
+				</div>
+			</header>
+			<main class="page-content">
+				<div class="page-heading">
+					<div><span class="eyebrow">YOUR WORKSPACE</span>
+						<h1>Add material</h1>
+						<p>Save notes or a resource so you can study it later.</p>
+					</div>
+				</div>
+				<div class="content-grid upload-layout">
+					<section class="panel">
+						<div class="panel-heading">
+							<div>
+								<h2>Material details</h2>
+								<p>Give your resource a name and connect it to a class.</p>
+							</div>
+						</div>
+						<form id="addMaterialForm" class="form-stack">
+							<label for="materialTitle">Title</label>
+							<input id="materialTitle" name="materialTitle" placeholder="e.g. Cell structure notes" required maxlength="100">
+							<label for="materialType">Material type</label>
+							<select id="materialType" name="materialType">
+								<option value="Notes">Class notes</option>
+								<option value="Reading">Reading</option>
+								<option value="Worksheet">Worksheet</option>
+								<option value="Study guide">Study guide</option>
+								<option value="Other">Other</option>
+							</select>
+							<label for="materialClass">Class</label>
+							<select id="materialClass" name="materialClass">
+								<option value="">No class / general</option>
+							</select>
+							<label for="materialNotes">Notes or pasted text (optional)</label>
+							<textarea id="materialNotes" name="materialNotes" rows="6" placeholder="Paste text or add a short description..."></textarea>
+							<label for="materialFile">Choose a file (visual demo only)</label>
+							<input id="materialFile" name="materialFile" type="file" accept=".pdf,.txt,.doc,.docx,.ppt,.pptx">
+							<p class="small-note">This prototype saves the title and text in your browser. It does not upload or process files yet.</p>
+							<button class="button button-primary button-full" type="submit">Save material</button>
+							<p id="materialFormMessage" class="form-message" role="status"></p>
+						</form>
+					</section>
+					<aside class="panel upload-help">
+						<div class="feature-icon">✦</div>
+						<h2>Make your material useful.</h2>
+						<p>After saving a resource, open Study Tools to draft a summary, flashcards, or practice questions from text you provide.</p>
+						<a class="text-link" href="study-tools.html">Explore study tools →</a>
+					</aside>
+				</div>
+			</main>
+		</div>
+	</body>
+</html>

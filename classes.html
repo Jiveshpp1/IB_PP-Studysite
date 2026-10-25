@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>My classes — Study Space</title>
+		<link rel="stylesheet" href="css/styles.css">
+		<script src="js/common.js" defer></script>
+		<script src="js/classes.js" defer></script>
+	</head>
+	<body class="app-page">
+		<aside class="sidebar" id="appSidebar"><a class="brand sidebar-brand" href="dashboard.html"><span class="brand-mark">S</span><span>Study Space</span></a>
+			<div class="sidebar-label">WORKSPACE</div>
+			<nav class="side-nav" aria-label="Workspace navigation"><a class="side-link " href="dashboard.html"><span class="side-icon">▦</span><span>Dashboard</span></a><a class="side-link active" href="classes.html"><span class="side-icon">▤</span><span>My classes</span></a><a class="side-link " href="materials.html"><span class="side-icon">▧</span><span>Materials</span></a><a class="side-link " href="upload.html"><span class="side-icon">+</span><span>Add material</span></a><a class="side-link " href="study-tools.html"><span class="side-icon">✦</span><span>Study tools</span></a></nav>
+			<div class="sidebar-bottom">
+				<div class="sidebar-tip"><span class="tip-icon">✦</span><strong>Keep it simple.</strong>
+					<p>One focused session is a good start.</p>
+				</div>
+				<a class="side-link" href="index.html"><span class="side-icon">↩</span><span>Back to website</span></a>
+			</div>
+		</aside>
+		<div class="app-main">
+			<header class="app-topbar">
+				<button class="menu-button" id="menuToggle" aria-label="Toggle navigation">☰</button>
+				<div class="breadcrumb">Study Space <span>/</span> My classes</div>
+				<div class="topbar-user"><span class="avatar" id="userAvatar">S</span><span id="userDisplayName">Student</span>
+					<button id="logoutButton" class="logout-button" type="button">Log out</button>
+				</div>
+			</header>
+			<main class="page-content">
+				<div class="page-heading">
+					<div><span class="eyebrow">YOUR WORKSPACE</span>
+						<h1>My classes</h1>
+						<p>Keep each subject and its materials in one place.</p>
+					</div>
+				</div>
+				<div class="content-grid classes-layout">
+					<section class="panel">
+						<div class="panel-heading">
+							<div>
+								<h2>Your subjects</h2>
+								<p>Classes you add will appear here.</p>
+							</div>
+						</div>
+						<div id="classList" class="list-stack">
+							<div class="empty-state"><span>▤</span><strong>No classes yet</strong>
+								<p>Use the form to add your first class.</p>
+							</div>
+						</div>
+					</section>
+					<section class="panel form-panel">
+						<div class="panel-heading">
+							<div>
+								<h2>Add a class</h2>
+								<p>Create a subject workspace.</p>
+							</div>
+						</div>
+						<form id="addClassForm" class="form-stack">
+							<label for="className">Class name</label>
+							<input id="className" name="className" placeholder="e.g. Biology" required maxlength="60">
+							<label for="classTeacher">Teacher (optional)</label>
+							<input id="classTeacher" name="classTeacher" placeholder="e.g. Ms. Lee" maxlength="60">
+							<label for="classColor">Choose a color</label>
+							<select id="classColor" name="classColor">
+								<option value="sage">Sage green</option>
+								<option value="blue">Soft blue</option>
+								<option value="lavender">Lavender</option>
+								<option value="peach">Peach</option>
+							</select>
+							<button class="button button-primary button-full" type="submit">＋ Add class</button>
+							<p id="classFormMessage" class="form-message" role="status"></p>
+						</form>
+					</section>
+				</div>
+			</main>
+		</div>
+	</body>
+</html>
