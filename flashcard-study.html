@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Study Flashcards — Study Space</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="common.js" defer></script>
+  </head>
+  <body class="app-page">
+    <aside class="sidebar" id="appSidebar">
+      <a class="brand sidebar-brand" href="dashboard.html"><span class="brand-mark">S</span><span>Study Space</span></a>
+      <div class="sidebar-label">WORKSPACE</div>
+      <nav class="side-nav" aria-label="Workspace navigation">
+        <a class="side-link " href="dashboard.html"><span class="side-icon">▦</span><span>Dashboard</span></a>
+        <a class="side-link " href="classes.html"><span class="side-icon">▤</span><span>My classes</span></a>
+        <a class="side-link " href="materials.html"><span class="side-icon">▧</span><span>Materials</span></a>
+        <a class="side-link " href="upload.html"><span class="side-icon">+</span><span>Add material</span></a>
+        <a class="side-link " href="flashcard-creator.html"><span class="side-icon">✦</span><span>Create flashcards</span></a>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="sidebar-tip"><span class="tip-icon">✦</span><strong>Keep it simple.</strong><p>One focused session is a good start.</p></div>
+        <a class="side-link" href="index.html"><span class="side-icon">↩</span><span>Back to website</span></a>
+      </div>
+    </aside>
+    <div class="app-main">
+      <header class="app-topbar">
+        <button class="menu-button" id="menuToggle" aria-label="Toggle navigation">☰</button>
+        <div class="breadcrumb">Study Space <span>/</span> Flashcards</div>
+        <div class="topbar-user">
+          <span class="avatar" id="userAvatar">S</span><span id="userDisplayName">Student</span>
+          <button id="logoutButton" class="logout-button" type="button">Log out</button>
+        </div>
+      </header>
+      <main class="page-content">
+        <div class="page-heading">
+          <div><span class="eyebrow">YOUR WORKSPACE</span><h1>Study Flashcards</h1><p>Review your flashcard set</p></div>
+        </div>
+
+        <section class="panel">
+          <div class="panel-heading">
+            <div class="panel-heading-controls">
+              <h2 id="setTitle">Flashcard set</h2>
+              <div id="cardCounter">0 / 0 cards reviewed</div>
+              <button id="btnRestart" class="button button-quiet button-small">Restart</button>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div id="flashcardContainer" class="flashcard-container">
+              <div id="flashcard" class="flashcard">
+                <div class="flashcard-front">
+                  <div class="flashcard-side">
+                    <span class="flashcard-term" id="frontTerm"></span>
+                  </div>
+                </div>
+                <div class="flashcard-back">
+                  <div class="flashcard-side">
+                    <span class="flashcard-definition" id="backDefinition"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="flashcardMessage" class="form-message" role="status"></div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-heading">
+            <div>
+              <h2>Controls</h2>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="control-grid">
+              <div class="control-item">
+                <span class="control-icon">↺</span>
+                <button id="btnFlip" class="button button-primary">Flip</button>
+              </div>
+              <div class="control-item">
+                <span class="control-icon">✓</span>
+                <button id="btnMarkKnown" class="button button-quiet">Mark known</button>
+              </div>
+              <div class="control-item">
+                <span class="control-icon">⟳</span>
+                <button id="btnShowHint" class="button button-quiet">Show hint</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const studySet = JSON.parse(localStorage.getItem('studyFlashcardSet'));
+        const container = document.getElementById('flashcardContainer');
+        const flashcard = document.getElementById('flashcard');
+        const frontTerm = document.getElementById('frontTerm');
+        const backDefinition = document.getElementById('backDefinition');
+        const cardCounter = document.getElementById('cardCounter');
+        const setTitle = document.getElementById('setTitle');
+        const btnFlip = document.getElementById('btnFlip');
+        const btnMarkKnown = document.getElementById('btnMarkKnown');
+        const btnShowHint = document.getElementById('btnShowHint');
+        const btnRestart = document.getElementById('btnRestart');
+        const msg = document.getElementById('flashcardMessage');
+
+        let cards = studySet ? studySet.cards : [];
+        let currentIndex = 0;
+        let revealed = false;
+        let hintShown = false;
+
+        if (!studySet || !cards || cards.length === 0) {
+          container.innerHTML = '<div class="empty-state"><span>✦</span><strong>No flashcard set found</strong><p>Create a flashcard set first.</p><a href="flashcard-creator.html" class="button button-primary">Go to creator</a></div>';
+          return;
+        }
+
+        setTitle.textContent = studySet.name;
+        updateCardCounter();
+
+        function updateCardCounter() {
+          const reviewed = Math.min(currentIndex + 1, cards.length);
+          cardCounter.textContent = reviewed + ' / ' + cards.length + ' cards reviewed';
+        }
+
+        function showCard(index) {
+          const card = cards[index];
+          if (!card) return;
+          frontTerm.textContent = card.term;
+          backDefinition.textContent = card.definition;
+          currentIndex = index;
+          revealed = false;
+          hintShown = false;
+          updateCardCounter();
+          msg.textContent = '';
+          flashcard.classList.remove('revealed', 'hint');
+          flashcard.classList.add('front');
+        }
+
+        function nextCard() {
+          let next = currentIndex + 1;
+          if (next >= cards.length) next = 0;
+          showCard(next);
+        }
+
+        function prevCard() {
+          let prev = currentIndex - 1;
+          if (prev < 0) prev = cards.length - 1;
+          showCard(prev);
+        }
+
+        btnFlip.addEventListener('click', () => {
+          if (revealed) {
+            flashcard.classList.remove('revealed');
+            flashcard.classList.add('front');
+          } else {
+            flashcard.classList.add('revealed');
+            flashcard.classList.remove('front');
+          }
+          revealed = !revealed;
+        });
+
+        btnMarkKnown.addEventListener('click', () => {
+          cards.splice(currentIndex, 1);
+          localStorage.setItem('studyFlashcardSet', JSON.stringify({ name: studySet.name, cards }));
+          nextCard();
+        });
+
+        btnShowHint.addEventListener('click', () => {
+          hintShown = true;
+          flashcard.classList.add('hint');
+          var def = backDefinition.textContent;
+          backDefinition.textContent = 'Hint: ' + def.replace('Hint: ', '');
+          msg.textContent = 'Hint revealed';
+        });
+
+        btnRestart.addEventListener('click', () => {
+          showCard(0);
+        });
+
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'ArrowRight') nextCard();
+          if (e.key === 'ArrowLeft') prevCard();
+          if (e.key === 'Escape') {
+            if (revealed) flashcard.classList.remove('revealed');
+            else flashcard.classList.add('revealed');
+            revealed = !revealed;
+          }
+          if (e.key === 'h' || e.key === 'H') btnShowHint.click();
+        });
+
+        showCard(0);
+      });
+    </script>
+
+    <style>
+      .flashcard-container { perspective: 1000px; }
+      .flashcard { width: 100%; max-width: 400px; position: relative; transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); box-shadow: var(--shadow); border-radius: var(--radius); background: var(--surface); overflow: hidden; margin: 0 auto; }
+      .flashcard.revealed { transform: rotateY(180deg); }
+      .flashcard.hint { transform: rotateY(180deg) scale(0.98); }
+      .flashcard.front { transform: rotateY(0deg); }
+      .flashcard-side { padding: 32px 24px; text-align: center; height: 280px; display: flex; flex-direction: column; justify-content: center; }
+      .flashcard-front .flashcard-side { color: var(--ink); }
+      .flashcard-back .flashcard-side { color: var(--green); transform: rotateY(180deg); }
+      .flashcard-term { font-size: 2rem; font-weight: 700; margin-bottom: 8px; display: block; }
+      .flashcard-definition { font-size: 1.2rem; color: var(--muted); margin-top: 16px; }
+      .panel-heading-controls { display: flex; justify-content: space-between; align-items: center; }
+      .control-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 20px; }
+      .control-item { text-align: center; }
+      .control-icon { font-size: 1.5rem; display: block; margin-bottom: 8px; }
+      .empty-state { text-align: center; padding: 40px 20px; }
+      .empty-state span { font-size: 48px; color: var(--muted); margin-bottom: 12px; display: block; }
+      .empty-state strong { font-size: 1.2rem; color: var(--ink); display: block; margin-bottom: 4px; }
+      .empty-state a { display: inline-block; margin-top: 16px; font-weight: 700; color: var(--green); }
+    </style>
+  </body>
+</html>

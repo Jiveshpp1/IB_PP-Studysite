@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Flashcards — Study Space</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="common.js" defer></script>
+  </head>
+  <body class="app-page">
+    <aside class="sidebar" id="appSidebar">
+      <a class="brand sidebar-brand" href="dashboard.html"><span class="brand-mark">S</span><span>Study Space</span></a>
+      <div class="sidebar-label">WORKSPACE</div>
+      <nav class="side-nav" aria-label="Workspace navigation">
+        <a class="side-link " href="dashboard.html"><span class="side-icon">▦</span><span>Dashboard</span></a>
+        <a class="side-link " href="classes.html"><span class="side-icon">▤</span><span>My classes</span></a>
+        <a class="side-link " href="materials.html"><span class="side-icon">▧</span><span>Materials</span></a>
+        <a class="side-link " href="upload.html"><span class="side-icon">+</span><span>Add material</span></a>
+        <a class="side-link active" href="flashcard-creator.html"><span class="side-icon">✦</span><span>Flashcards</span></a>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="sidebar-tip"><span class="tip-icon">✦</span><strong>Keep it simple.</strong><p>One focused session is a good start.</p></div>
+        <a class="side-link" href="index.html"><span class="side-icon">↩</span><span>Back to website</span></a>
+      </div>
+    </aside>
+    <div class="app-main">
+      <header class="app-topbar">
+        <button class="menu-button" id="menuToggle" aria-label="Toggle navigation">☰</button>
+        <div class="breadcrumb">Study Space <span>/</span> Flashcards</div>
+        <div class="topbar-user">
+          <span class="avatar" id="userAvatar">S</span><span id="userDisplayName">Student</span>
+          <button id="logoutButton" class="logout-button" type="button">Log out</button>
+        </div>
+      </header>
+      <main class="page-content">
+        <div class="page-heading">
+          <div><span class="eyebrow">YOUR WORKSPACE</span><h1>Flashcards</h1><p>Create and review flashcards to master your material.</p></div>
+        </div>
+</style>
+
+        <section class="panel">
+          <div class="panel-heading">
+            <div>
+              <h2>Create a flashcard set</h2>
+              <p>Add term and definition pairs to build your study set.</p>
+            </div>
+          </div>
+          <div class="panel-body">
+            <form id="flashcardSetForm" class="form-stack">
+              <label for="setName">Flashcard set name</label>
+              <input type="text" id="setName" name="setName" placeholder="e.g. Biology Vocab" required maxlength="80">
+
+              <div class="form-grid">
+                <div class="form-group">
+                  <label>Term</label>
+                  <input type="text" id="flashcardTerm" placeholder="The term goes here" required>
+                </div>
+                <div class="form-group">
+                  <label>Definition</label>
+                  <textarea id="flashcardDefinition" rows="3" placeholder="The definition goes here" required></textarea>
+                </div>
+              </div>
+
+              <button type="submit" class="button button-primary button-full">+ Add flashcard to set</button>
+              <p id="flashcardFormMessage" class="form-message" role="status"></p>
+            </form>
+          </div>
+        </section>
+
+        <section class="panel" id="flashcardSetsSection" style="display: none;">
+          <div class="panel-heading">
+            <div>
+              <h2>Your flashcard sets</h2>
+              <p>Manage your existing flashcard sets.</p>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div id="flashcardSetsList" class="flashcard-sets-list">
+              <div class="empty-state">
+                <span>✦</span>
+                <strong>No flashcard sets yet</strong>
+                <p>Create your first flashcard set above.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script>
+      // Flashcard creator functionality
+      document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('flashcardSetForm');
+        const setsSection = document.getElementById('flashcardSetsSection');
+        const setsList = document.getElementById('flashcardSetsList');
+
+        function loadSets() {
+          const sets = JSON.parse(localStorage.getItem('flashcardSets') || '[]');
+          if (sets.length === 0) {
+            setsSection.style.display = 'none';
+            return;
+          }
+          setsSection.style.display = 'block';
+          setsList.innerHTML = sets.map((set, setIndex) => `
+            <div class="flashcard-set-card" data-set-index="${setIndex}">
+              <div class="set-header">
+                <h3>${escapeHtml(set.name)}</h3>
+                <span class="set-count">${set.cards.length} cards</span>
+              </div>
+              <div class="set-actions">
+                <button class="button button-quiet button-small">Study</button>
+                <button class="button button-quiet button-small">Edit</button>
+                <button class="button button-quiet button-small">Delete</button>
+              </div>
+            </div>
+          `).join('');
+
+          // Add click handlers for study buttons
+          document.querySelectorAll('.flashcard-set-card .set-actions .button:first-child').forEach(btn => {
+            btn.addEventListener('click', () => {
+              const setIndex = btn.closest('.flashcard-set-card').dataset.setIndex;
+              studySet(setIndex);
+            });
+          });
+        }
+
+        function studySet(setIndex) {
+          const sets = JSON.parse(localStorage.getItem('flashcardSets') || '[]');
+          const set = sets[setIndex];
+          if (!set) return;
+          // Navigate to study page with set data
+          localStorage.setItem('studyFlashcardSet', JSON.stringify(set));
+          window.location.href = 'flashcard-study.html';
+        }
+
+        // Form submission - add card to set
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const setName = document.getElementById('setName').value.trim();
+          const term = document.getElementById('flashcardTerm').value.trim();
+          const definition = document.getElementById('flashcardDefinition').value.trim();
+
+          if (!setName || !term || !definition) {
+            form.flashcardFormMessage.textContent = 'Please fill in all fields.';
+            return;
+          }
+
+          let sets = JSON.parse(localStorage.getItem('flashcardSets') || '[]');
+
+          // Check if set already exists
+          const existingSetIndex = sets.findIndex(s => s.name === setName);
+          if (existingSetIndex >= 0) {
+            // Add card to existing set
+            sets[existingSetIndex].cards.push({ term, definition });
+            document.getElementById('flashcardFormMessage').textContent = 'Card added to existing set!';
+          } else {
+            // Create new set
+            sets.push({
+              name: setName,
+              cards: [{ term, definition }]
+            });
+            document.getElementById('flashcardFormMessage').textContent = 'New set created!';
+          }
+
+          localStorage.setItem('flashcardSets', JSON.stringify(sets));
+          form.reset();
+          loadSets();
+        });
+
+        loadSets();
+      });
+    </script>
+  </body>
+</html>
