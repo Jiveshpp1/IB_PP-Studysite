@@ -1,35 +1,41 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const form = document.getElementById("addMaterialForm");
-  const classSelect = document.getElementById("materialClass");
+  const notebookSelect = document.getElementById("materialNotebook");
   const message = document.getElementById("materialFormMessage");
-
-  function renderClassOptions() {
-    const selectedValue = classSelect.value;
-    classSelect.innerHTML = `<option value="">No class / general</option>` +
-      getClasses().map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.name)}</option>`).join("");
-    classSelect.value = selectedValue;
+  try {
+    const notebooks = await api("/notebooks");
+    notebookSelect.innerHTML = notebooks.length ? notebooks.map(item => `<option value="${item.id}">${escapeHtml(item.title)}</option>`).join("") : `<option value="">Create a notebook first</option>`;
+  } catch (error) {
+    notebookSelect.innerHTML = `<option value="">Could not load notebooks</option>`;
+    message.textContent = error.message;
   }
-
-  form.addEventListener("submit", event => {
+  form.addEventListener("submit", async event => {
     event.preventDefault();
-    const title = document.getElementById("materialTitle").value.trim();
-    const type = document.getElementById("materialType").value;
-    const classId = classSelect.value;
-    const classItem = getClasses().find(item => item.id === classId);
-    const notes = document.getElementById("materialNotes").value.trim();
-    const fileInput = document.getElementById("materialFile");
-    const selectedFileName = fileInput.files[0] ? fileInput.files[0].name : "";
-    const materials = getMaterials();
-    materials.unshift({
-      id: makeId("material"), title, type, classId,
-      className: classItem ? classItem.name : "",
-      notes: notes || (selectedFileName ? `Selected file: ${selectedFileName} (not uploaded)` : ""),
-      createdAt: new Date().toISOString()
-    });
-    saveStoredData(STORAGE_KEYS.materials, materials);
-    form.reset();
-    renderClassOptions();
-    message.textContent = "Material details saved in this browser.";
+    const file = document.getElementById("materialFile").files[0];
+    if (file && file.size > 5 * 1024 * 1024) {
+      message.textContent = "Files must be 5 MB or smaller.";
+      return;
+    }
+    try {
+      const fileData = file ? (await readFile(file)).split(",")[1] : null;
+      const result = await api("/sources", { method: "POST", body: JSON.stringify({
+        notebook_id: Number(notebookSelect.value),
+        title: document.getElementById("materialTitle").value.trim(),
+        file_name: file?.name || null,
+        mime_type: file?.type || null,
+        content: document.getElementById("materialNotes").value.trim() || null,
+        file_data: fileData,
+      }) });
+      location.href = `notebook.html?id=${result.notebook_id}`;
+    } catch (error) { message.textContent = error.message; }
   });
-  renderClassOptions();
 });
+
+function readFile(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(new Error("Could not read the selected file."));
+    reader.readAsDataURL(file);
+  });
+}

@@ -1,74 +1,119 @@
-// Real auth logic - uses backend API instead of localStorage
 document.addEventListener("DOMContentLoaded", () => {
   const signupForm = document.getElementById("signupForm");
-  if (signupForm) {
-    signupForm.addEventListener("submit", event => {
-      event.preventDefault();
-      const name = document.getElementById("signupName").value.trim();
-      const email = document.getElementById("signupEmail").value.trim();
-      const password = document.getElementById("signupPassword").value;
-      const message = document.getElementById("signupMessage");
-
-      if (password.length < 8) {
-        message.textContent = "Use at least 8 characters for this password.";
-        return;
-      }
-
-      // Send signup request to backend
-      fetch("/auth/signup", {
+  signupForm?.addEventListener("submit", async event => {
+    event.preventDefault();
+    const message = document.getElementById("signupMessage");
+    const submit = signupForm.querySelector('button[type="submit"]');
+    submit.disabled = true;
+    message.textContent = "Creating your account…";
+    try {
+      const result = await api("/auth/signup", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.needsVerification) {
-          // Show confirmation code input
-          message.textContent = `Check your email for confirmation code. Code: ${data.message}`;
-          // In a real app, show a form to enter the code
-          // For demo, auto-proceed after a short delay
-          setTimeout(() => {
-            window.location.href = "dashboard.html";
-          }, 2000);
-        } else {
-          message.textContent = data.message;
-          window.location.href = "dashboard.html";
-        }
-      })
-      .catch(error => {
-        console.error("Error:", error);
-        message.textContent = "Error during signup. Please try again.";
+        body: JSON.stringify({
+          name: document.getElementById("signupName").value.trim(),
+          email: document.getElementById("signupEmail").value.trim(),
+          password: document.getElementById("signupPassword").value,
+        }),
       });
-    });
-  }
+      location.href = `verify.html?email=${encodeURIComponent(result.email)}`;
+    } catch (error) {
+      message.textContent = error.message;
+      submit.disabled = false;
+    }
+  });
 
   const loginForm = document.getElementById("loginForm");
-  if (loginForm) {
-    loginForm.addEventListener("submit", event => {
-      event.preventDefault();
-      const email = document.getElementById("loginEmail").value.trim();
-      const confirmationCode = document.getElementById("loginPassword").value; // Using password field for confirmation code
-      const message = document.getElementById("loginMessage");
-
-      // Send signin request to backend
-      fetch("/auth/signin", {
+  loginForm?.addEventListener("submit", async event => {
+    event.preventDefault();
+    const message = document.getElementById("loginMessage");
+    const submit = loginForm.querySelector('button[type="submit"]');
+    submit.disabled = true;
+    message.textContent = "Signing in…";
+    try {
+      const result = await api("/auth/login", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, confirmationCode })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          message.textContent = "Logging in...";
-          window.location.href = "dashboard.html";
-        } else {
-          message.textContent = data.error || "Login failed. Please try again.";
-        }
-      })
-      .catch(error => {
-        console.error("Error:", error);
-        message.textContent = "Error during login. Please try again.";
+        body: JSON.stringify({
+          email: document.getElementById("loginEmail").value.trim(),
+          password: document.getElementById("loginPassword").value,
+        }),
       });
-    });
-  }
+      location.href = "dashboard.html";
+    } catch (error) {
+      message.textContent = error.message;
+      submit.disabled = false;
+      if (error.message.includes("verify")) {
+        const email = document.getElementById("loginEmail").value.trim();
+        message.innerHTML = `${escapeHtml(error.message)} <a href="verify.html?email=${encodeURIComponent(email)}">Verify email</a>`;
+      }
+    }
+  });
+
+  const verifyForm = document.getElementById("verifyForm");
+  verifyForm?.addEventListener("submit", async event => {
+    event.preventDefault();
+    const message = document.getElementById("verifyMessage");
+    try {
+      await api("/auth/verify", {
+        method: "POST",
+        body: JSON.stringify({
+          email: document.getElementById("verifyEmail").value.trim(),
+          code: document.getElementById("verifyCode").value.trim(),
+        }),
+      });
+      location.href = "dashboard.html";
+    } catch (error) {
+      message.textContent = error.message;
+    }
+  });
+
+  document.getElementById("resendCode")?.addEventListener("click", async () => {
+    const message = document.getElementById("verifyMessage");
+    try {
+      const result = await api("/auth/resend-verification", {
+        method: "POST",
+        body: JSON.stringify({ email: document.getElementById("verifyEmail").value.trim() }),
+      });
+      message.textContent = result.message;
+    } catch (error) {
+      message.textContent = error.message;
+    }
+  });
+
+  const forgotForm = document.getElementById("forgotForm");
+  forgotForm?.addEventListener("submit", async event => {
+    event.preventDefault();
+    const message = document.getElementById("forgotMessage");
+    try {
+      await api("/auth/forgot-password", {
+        method: "POST",
+        body: JSON.stringify({ email: document.getElementById("forgotEmail").value.trim() }),
+      });
+      location.href = `reset-password.html?email=${encodeURIComponent(document.getElementById("forgotEmail").value.trim())}`;
+    } catch (error) {
+      message.textContent = error.message;
+    }
+  });
+
+  const resetForm = document.getElementById("resetForm");
+  resetForm?.addEventListener("submit", async event => {
+    event.preventDefault();
+    const message = document.getElementById("resetMessage");
+    try {
+      await api("/auth/reset-password", {
+        method: "POST",
+        body: JSON.stringify({
+          email: document.getElementById("resetEmail").value.trim(),
+          code: document.getElementById("resetCode").value.trim(),
+          password: document.getElementById("resetPassword").value,
+        }),
+      });
+      message.textContent = "Password updated. Redirecting to sign in…";
+      setTimeout(() => location.href = "login.html", 1200);
+    } catch (error) {
+      message.textContent = error.message;
+    }
+  });
+
+  const emailField = document.getElementById("verifyEmail") || document.getElementById("resetEmail");
+  if (emailField) emailField.value = new URLSearchParams(location.search).get("email") || "";
 });

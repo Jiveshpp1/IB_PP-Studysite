@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 :root {
 	--bg:#f7f8f5;
 	--surface:#fff;
@@ -23,7 +23,7 @@ body {
 	margin:0;
 	background:var(--bg);
 	color:var(--ink);
-	font-family:'DM Sans',sans-serif;
+	font-family:Inter,sans-serif;
 	font-size:15px;
 	line-height:1.55
 }
@@ -31,7 +31,7 @@ h1,h2,h3,p {
 	margin-top:0
 }
 h1,h2,h3 {
-	font-family:Manrope,sans-serif;
+	font-family:Inter,sans-serif;
 	letter-spacing:-.035em;
 	line-height:1.18
 }
@@ -1161,6 +1161,93 @@ button {
 @media(max-width:650px) {
 	.site-header {
 		padding:18px 20px
+	}
+
+	/* Study Space dark-violet design system */
+	:root {
+		--bg:#0e1018;
+		--surface:#171a25;
+		--ink:#eef0f7;
+		--muted:#9ba2b5;
+		--line:#2a2e3b;
+		--sage:#29243c;
+		--sage-dark:#c4b8ff;
+		--green:#9a82ff;
+		--green-hover:#ad9aff;
+		--mint:#211e31;
+		--shadow:0 18px 55px rgba(0,0,0,.24);
+		--radius:18px
+	}
+	body,.app-page {background:var(--bg);color:var(--ink)}
+	.site-header,.site-footer {color:var(--ink)}
+	.brand,.brand:hover,.quick-action {color:var(--ink)}
+	.top-nav>a:not(.button),.breadcrumb,.side-link {color:#b4b8c8}
+	.eyebrow,.text-accent,.link-button {color:#a995ff}
+	.button-primary {background:#7658e8;color:#fff}
+	.button-primary:hover {background:#886df0}
+	.button-quiet,.tool-tab {background:#1b1e2a;border-color:var(--line);color:#e6e7ef}
+	.button-quiet:hover,.side-link:hover {background:#232033;color:#c4b8ff}
+	.site-header,.site-footer {border-color:var(--line)}
+	.preview-window,.auth-card,.feature-card,.stat-card,.panel,.material-card,.flashcard,.output-panel {
+		background:#171a25;border-color:var(--line);color:var(--ink)
+	}
+	.preview-top,.auth-page,.app-topbar,.sidebar {background:#13151f;border-color:var(--line)}
+	.preview-body,.preview-content,.preview-task,.preview-stats>div {background:#171a25;color:var(--ink)}
+	.preview-task,.class-row,.material-row,.quick-action,.material-card .card-actions {border-color:var(--line)}
+	.preview-task small,.preview-title,.preview-content .muted,.feature-card p,.section-heading p {color:var(--muted)}
+	.auth-aside,.welcome-panel {background:#211e31;color:var(--ink)}
+	.auth-aside p,.welcome-panel p,.art-card small {color:#aaa5c5}
+	.aside-orb,.brand-mark {background:#7658e8}
+	.sidebar-label {color:#777e93}
+	.side-link.active {background:#26213a;color:#c1b2ff}
+	.sidebar-tip,.upload-help {background:#1b1e2a}
+	.app-topbar {background:#13151f}
+	.avatar {background:#29243c;color:#c4b8ff}
+	.welcome-panel .button-light {background:#28233d;color:#d9d0ff}
+	.art-circle {background:#322a4c}
+	.art-card {background:#28243a;color:#c4b8ff}
+	.stat-card,.panel {border-color:var(--line)}
+	.class-row,.material-row,.material-card,.tool-tab,.flashcard {border-color:var(--line);background:#191c28}
+	.class-swatch,.material-type {background:#29243c;color:#c4b8ff}
+	.class-swatch.blue {background:#202d42;color:#8eb8ff}
+	.class-swatch.lavender {background:#302747;color:#c8a9ff}
+	.class-swatch.peach {background:#3a2a2b;color:#ffb69e}
+	.tool-tab.active {background:#29243c;border-color:#39304e;color:#c4b8ff}
+	.form-stack input,.form-stack select,.form-stack textarea,.study-panel textarea {
+		background:#10121b;border-color:#343848;color:var(--ink)
+	}
+	.form-stack input:focus,.form-stack select:focus,.form-stack textarea:focus,.study-panel textarea:focus {
+		border-color:#9a82ff;box-shadow:0 0 0 3px #9a82ff24
+	}
+	.prompt-output {background:#10121b}
+	.auth-divider {color:var(--muted)}
+	.auth-divider:before,.auth-divider:after {background:var(--line)}
+	.form-message {color:#b6a7ff}
+	.sidebar-group {margin-bottom:20px}
+	.sidebar-logout {border:0;background:transparent;width:100%;text-align:left}
+	.menu-button {color:var(--ink)}
+	.link-button {margin-left:8px}
+	.calendar-grid {display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px}
+	.calendar-day {min-height:88px;padding:8px;border:1px solid var(--line);border-radius:10px;background:#191c28}
+	.calendar-day.muted-day {opacity:.45}
+	.calendar-day-number {font-size:.8rem;color:var(--muted)}
+	.calendar-event {display:block;margin-top:5px;padding:3px 5px;border-radius:5px;background:#29243c;color:#d2c8ff;font-size:.68rem;overflow:hidden;text-overflow:ellipsis}
+	.chat-layout {display:grid;grid-template-columns:260px minmax(0,1fr);gap:16px;min-height:65vh}
+	.chat-messages {display:flex;flex-direction:column;gap:12px;min-height:360px;max-height:60vh;overflow:auto;padding:12px 0}
+	.chat-message {max-width:85%;padding:12px 15px;border-radius:14px;background:#222532;white-space:pre-wrap;overflow-wrap:anywhere}
+	.chat-message.user {align-self:flex-end;background:#332a54}
+	.chat-composer {display:flex;gap:10px;align-items:flex-end}
+	.chat-composer textarea {flex:1;resize:vertical;min-height:48px}
+	.flashcard-view {min-height:240px;display:grid;place-items:center;text-align:center;cursor:pointer}
+	.flashcard-view strong {font-size:clamp(1.5rem,4vw,2.4rem)}
+	.option-row {display:flex;gap:10px;align-items:center;margin:10px 0}
+	.form-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+	@media(max-width:700px) {
+		.chat-layout {grid-template-columns:1fr}
+		.chat-layout .chat-history {max-height:150px;overflow:auto}
+		.calendar-day {min-height:60px;padding:5px}
+		.calendar-event {font-size:.58rem}
+		.form-grid {grid-template-columns:1fr}
 	}
 	.top-nav {
 		gap:10px

@@ -13,16 +13,19 @@
 			<section class="auth-card"><span class="eyebrow">WELCOME BACK</span>
 				<h1>Pick up where you left off.</h1>
 				<p class="muted">Log in to return to your study space.</p>
+				<a class="button button-quiet button-full google-button" href="/auth/google">Continue with Google</a>
+				<div class="auth-divider"><span>or continue with email</span></div>
 				<form id="loginForm" class="form-stack">
 					<label for="loginEmail">Email address</label>
 					<input id="loginEmail" name="email" type="email" placeholder="you@example.com" autocomplete="email" required>
 					<label for="loginPassword">Password</label>
 					<input id="loginPassword" name="password" type="password" placeholder="Enter your password" autocomplete="current-password" required>
+					<a class="text-link auth-forgot" href="forgot-password.html">Forgot password?</a>
 					<button class="button button-primary button-full" type="submit">Log in</button>
 					<p id="loginMessage" class="form-message" role="status"></p>
 				</form>
 				<p class="auth-switch">New to Study Space? <a href="signup.html">Create an account</a></p>
-				<p class="small-note">Demo only: this form does not securely authenticate users yet.</p>
+				<p class="small-note">Sign-in is protected with a secure server session.</p>
 			</section>
 			<aside class="auth-aside">
 				<div class="aside-orb">S</div>
